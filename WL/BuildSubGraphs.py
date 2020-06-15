@@ -11,6 +11,10 @@
 # Note: nodes are 0-indexed
 
 from collections import OrderedDict
+from sys import stderr
+from tqdm import trange
+
+print("Begin Building Subgraphs",file=stderr,flush=True)
 
 n, m = list(map(int, input().split()))
 k = int(input())
@@ -35,7 +39,7 @@ colors = (n**k)*[None]
 
 curr = (n ** k) * [None]
 # It isn't the most efficient way, should reuse info between constructions
-for i in range(n ** k):
+for i in trange(n ** k, desc='Pre-processing'):
     curr[i] = k * [0]
     if i > 0:
         curr[i][0] += 1
@@ -47,6 +51,8 @@ for i in range(n ** k):
                 curr[i][j] = 0
                 if j+1 < n:  # Should always evaluate to True
                     curr[i][j + 1] += 1
+                else:
+                    print("WTF?", file=stderr, flush=True)
 
     temp = set(curr[i])
     inducedGraphs[i] = n * [None]
@@ -58,7 +64,7 @@ for i in range(n ** k):
                 inducedGraphs[i][u].append(v)
 
 c = 0
-for i in range(n ** k):
+for i in trange(n ** k, desc='Coloring'):
     if colors[i] is not None:
         continue
     colors[i] = c
@@ -81,7 +87,7 @@ for i in range(n ** k):
             colors[j] = c
     c += 1
 
-for i in range(n ** k):
+for i in trange(n ** k, desc='Building Graph of Sub-Graphs'):
     for j in range(i+1, n ** k):
         index = -1
         for l in range(k):
@@ -99,3 +105,4 @@ print(c)
 print(' '.join(map(str, colors)))
 print('\n'.join(map(lambda x: '\n'.join(map(lambda y: ' '.join(
     map(str, y)), map(lambda z: [z[0]]+z[1], enumerate(x)))), outG)))
+print("End Building Subgraphs",file=stderr,flush=True)

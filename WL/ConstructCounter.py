@@ -1,7 +1,7 @@
 import numpy as np
 
 from copy import deepcopy
-
+from sys import stderr
 
 def f(x):
     if x == 0:
@@ -10,7 +10,7 @@ def f(x):
         return 1 - f(x // 2)
     return f(x // 2)
 
-
+print("Begin Construction",file=stderr,flush=True)
 # Assumes graph is 3-regular
 l = int(input())
 n, m = list(map(int, input().split()))
@@ -132,3 +132,5 @@ for u in range(len(X) * n):
         if v < u:
             continue
         print(u, v)
+print("t: {}".format(t),file=stderr,flush=True)
+print("End Construction",file=stderr,flush=True)
